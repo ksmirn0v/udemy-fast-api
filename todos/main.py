@@ -7,9 +7,11 @@ from starlette import status
 
 import models
 from database import engine, session
+from routers import auth
 
 
 app = FastAPI()
+app.include_router(router=auth.router)
 
 
 models.base.metadata.create_all(bind=engine)
