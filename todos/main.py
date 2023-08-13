@@ -75,3 +75,20 @@ async def add_record(
 
     db.add(todos_model)
     db.commit()
+
+
+@app.delete('/todos/{record_id}', status_code=status.HTTP_204_NO_CONTENT)
+async def delete_record(
+    db: Annotated[Session, Depends(get_db)],
+    record_id: int = Path(gt=0),
+):
+
+    todos_model = db.query(models.Todos).filter(models.Todos.id == record_id).first()
+    if todos_model is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"The record with id={record_id} was not found in the database!",
+        )
+
+    db.query(models.Todos).filter(models.Todos.id == record_id).delete()
+    db.commit()
