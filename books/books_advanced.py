@@ -54,11 +54,20 @@ def get_book():
     return BOOKS
 
 
-@app.get("/book/{book_id}")
+@app.get("/books/{book_id}")
 def get_book_by_id(book_id: int):
     for book in BOOKS:
         if book.id == book_id:
             return book
+
+
+@app.get("/books/")
+def get_book_by_rating(rating: int):
+    books_to_return = []
+    for book in BOOKS:
+        if book.rating == rating:
+            books_to_return.append(book)
+    return books_to_return
 
 
 @app.post("/books/create_book")
