@@ -31,6 +31,16 @@ class BookRequest(BaseModel):
     description: str = Field(min_length=3, max_length=100)
     rating: int = Field(gt=0, lt=6)
 
+    class Config:
+        json_schema_extra = {
+            'example': {
+                'title': 'example title',
+                'author': 'example author',
+                'description': 'example description',
+                'rating': 5,
+            }
+        }
+
 
 BOOKS = [
     Book(id=1, title="title 1", author="author 1", description="description 1", rating=5),
