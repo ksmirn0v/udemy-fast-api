@@ -50,19 +50,19 @@ BOOKS = [
 
 
 @app.get("/books")
-def get_book():
+async def get_book():
     return BOOKS
 
 
 @app.get("/books/{book_id}")
-def get_book_by_id(book_id: int):
+async def get_book_by_id(book_id: int):
     for book in BOOKS:
         if book.id == book_id:
             return book
 
 
 @app.get("/books/")
-def get_book_by_rating(rating: int):
+async def get_book_by_rating(rating: int):
     books_to_return = []
     for book in BOOKS:
         if book.rating == rating:
@@ -70,11 +70,18 @@ def get_book_by_rating(rating: int):
     return books_to_return
 
 
-@app.post("/books/create_book")
-def create_book(book_request: BookRequest):
+@app.post("/books/create-book")
+async def create_book(book_request: BookRequest):
     book = Book(**book_request.model_dump())
     create_id(book=book)
     BOOKS.append(book)
+
+
+@app.put("/books/update-book")
+async def update_book(book_request: BookRequest):
+    for idx in range(len(BOOKS)):
+        if BOOKS[idx].id == book_request.id:
+            BOOKS[idx] = Book(**book_request.model_dump())
 
 
 def create_id(book: Book):
