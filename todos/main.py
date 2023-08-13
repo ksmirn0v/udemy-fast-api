@@ -53,3 +53,25 @@ async def add_record(db: Annotated[Session, Depends(get_db)], todos_request: Tod
     todos_model = models.Todos(**todos_request.model_dump())
     db.add(todos_model)
     db.commit()
+
+
+@app.put('/todos/{record_id}', status_code=status.HTTP_204_NO_CONTENT)
+async def add_record(
+    db: Annotated[Session, Depends(get_db)],
+    todos_request: TodosRequest,
+    record_id: int = Path(gt=0),
+):
+    todos_model = db.query(models.Todos).filter(models.Todos.id == record_id).first()
+    if todos_model is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"The record with id={record_id} was not found in the database!",
+        )
+
+    todos_model.title = todos_request.title
+    todos_model.description = todos_request.description
+    todos_model.priority = todos_request.priority
+    todos_model.complete = todos_request.complete
+
+    db.add(todos_model)
+    db.commit()
