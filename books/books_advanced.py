@@ -84,6 +84,14 @@ async def update_book(book_request: BookRequest):
             BOOKS[idx] = Book(**book_request.model_dump())
 
 
+@app.delete("/books/delete-book/")
+async def delete_book(book_id: int):
+    for idx in range(len(BOOKS)):
+        if BOOKS[idx].id == book_id:
+            BOOKS.pop(idx)
+            break
+
+
 def create_id(book: Book):
     if len(BOOKS) > 0:
         book.id = BOOKS[-1].id + 1
